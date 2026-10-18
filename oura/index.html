@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<title>Iterum: back to the app</title>
+<style>body{font:16px -apple-system,system-ui,sans-serif;margin:40px 16px;color:#222;background:#fff}a{color:#06c}@media(prefers-color-scheme:dark){body{color:#eee;background:#111}a{color:#6af}}</style>
+</head>
+<body>
+<p>Returning to Iterum&hellip;</p>
+<p><a id="back" href="iterum://oura">Open Iterum</a></p>
+<script>
+// Oura accepts only https redirects, so its sign-in comes back here. This page goes only to iterum://oura and carries
+// only the one-time code and state (plain URL-safe tokens); the app checks the state and finishes the sign-in.
+(function () {
+  var target = "iterum://oura", q = new URLSearchParams(location.search), out = new URLSearchParams();
+  ["code", "state"].forEach(function (k) {
+    var v = q.get(k);
+    if (v && /^[A-Za-z0-9._~-]{1,512}$/.test(v)) out.set(k, v);
+  });
+  history.replaceState(null, "", location.pathname);
+  var url = target + (out.toString() ? "?" + out.toString() : "");
+  document.getElementById("back").href = url;
+  location.replace(url);
+})();
+</script>
+</body>
+</html>
