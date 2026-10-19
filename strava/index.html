@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<title>Iterum: back to the app</title>
+<style>body{font:16px -apple-system,system-ui,sans-serif;margin:40px 16px;color:#222;background:#fff}a{color:#06c}@media(prefers-color-scheme:dark){body{color:#eee;background:#111}a{color:#6af}}</style>
+</head>
+<body>
+<p>Returning to Iterum&hellip;</p>
+<p><a id="back" href="iterum://strava">Open Iterum</a></p>
+<script>
+// Strava's sign-in comes back to the app's https domain, so it lands here. This page goes only to iterum://strava and carries
+// only the one-time code and state (plain URL-safe tokens), the scope the person granted, or Strava's error word;
+// the app checks the state and finishes the sign-in.
+(function () {
+  var target = "iterum://strava", q = new URLSearchParams(location.search), out = new URLSearchParams();
+  var ok = {code: /^[A-Za-z0-9._~-]{1,512}$/, state: /^[A-Za-z0-9._~-]{1,512}$/,
+            scope: /^[a-z_:]{1,40}(,[a-z_:]{1,40}){0,9}$/, error: /^[a-z_]{1,40}$/};
+  Object.keys(ok).forEach(function (k) {
+    var v = q.get(k);
+    if (v && ok[k].test(v)) out.set(k, v);
+  });
+  history.replaceState(null, "", location.pathname);
+  var url = target + (out.toString() ? "?" + out.toString() : "");
+  document.getElementById("back").href = url;
+  location.replace(url);
+})();
+</script>
+</body>
+</html>
