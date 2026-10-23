@@ -12,10 +12,12 @@
 <p>Returning to Iterum&hellip;</p>
 <p><a id="back" href="iterum://oura">Open Iterum</a></p>
 <script>
-// Oura accepts only https redirects, so its sign-in comes back here. This page goes only to iterum://oura and carries
-// only the one-time code and state (plain URL-safe tokens); the app checks the state and finishes the sign-in.
+// Oura accepts only https redirects, so its sign-in comes back here. This page goes only to iterum://oura (or, for a
+// sign-in Iterum Dev started, whose state begins "dev.", to iterum-dev://oura: Oura registered this one address) and
+// carries only the one-time code and state (plain URL-safe tokens); the app checks the state and finishes the sign-in.
 (function () {
-  var target = "iterum://oura", q = new URLSearchParams(location.search), out = new URLSearchParams();
+  var q = new URLSearchParams(location.search), out = new URLSearchParams();
+  var target = /^dev\./.test(q.get("state") || "") ? "iterum-dev://oura" : "iterum://oura";
   ["code", "state"].forEach(function (k) {
     var v = q.get(k);
     if (v && /^[A-Za-z0-9._~-]{1,512}$/.test(v)) out.set(k, v);
